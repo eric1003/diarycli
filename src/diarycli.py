@@ -53,12 +53,51 @@ def cat_entry():
         print("Diary for today not created yet")
 
 
+# def main():
+#     args = sys.argv[1:]
+#     if not args:
+#         edit_entry()
+#     elif args[0] == "cat":
+#         cat_entry()
+#     else:
+#        edit_entry(parse_date(args[0]))
+
+# Add new function to search
+def find_entry(search_str):
+    # Create a list to collect matched entries
+    matched_entries = []
+
+    # Go through each year directory in the diary directory
+    for year_dir in Path(DIARY_DIR).iterdir():
+        # Go through each month directory in the current year directory
+        for month_dir in year_dir.iterdir():
+            # Go through each file in the month directory
+            for entry_file in month_dir.iterdir():
+                # Open the diary file and search for the given string
+                with open(entry_file, "r") as f:
+                    lines = f.readlines()
+                    for line_no, line in enumerate(lines, start=1):
+                        if search_str in line:
+                            # If the string is found, add the file name and line number to the list
+                            matched_entries.append((entry_file, line_no, line.strip()))
+
+    # Display the matched entries
+    if not matched_entries:
+        print(f"No entries found for '{search_str}'")
+        return
+
+    for entry_file, line_no, line in matched_entries:
+        print(f"{entry_file.name} (Line {line_no}): {line}")
+
+
 def main():
     args = sys.argv[1:]
     if not args:
         edit_entry()
     elif args[0] == "cat":
         cat_entry()
+    elif args[0] == "find" and len(args) > 1:  # Check if "find" command is used and a string is given to search
+        find_entry(args[1])
     else:
        edit_entry(parse_date(args[0]))
 
