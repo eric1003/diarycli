@@ -73,7 +73,7 @@ def find_entry(search_str):
             for month_dir in year_dir.iterdir():
                 if month_dir.is_dir():  # Likewise, add this check here too
                     for entry_file in month_dir.iterdir():
-                        if entry_file.is_file():  # To be extra cautious, ensure this is a file before opening
+                        if entry_file.is_file() and entry_file.suffix == '.md':  # To be extra cautious, ensure this is a file before opening and the file type is md.
                             # To see which file has encoding problem
                             try:
                                 with open(entry_file, 'r', encoding='utf-8') as f:
