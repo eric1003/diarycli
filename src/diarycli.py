@@ -73,15 +73,26 @@ def find_entry(search_str):
             for month_dir in year_dir.iterdir():
                 if month_dir.is_dir():  # Likewise, add this check here too
                     for entry_file in month_dir.iterdir():
-                        if entry_file.is_file():  # To be extra cautious, ensure this is a file before opening
-                            # rest of your code...
-                            # Open the diary file and search for the given string
-                            with open(entry_file, "r") as f:
+                        # To see which file has encoding problem
+                        try:
+                            with open(entry_file, 'r', encoding='utf-8') as f:
                                 lines = f.readlines()
                                 for line_no, line in enumerate(lines, start=1):
                                     if search_str in line:
                                         # If the string is found, add the file name and line number to the list
                                         matched_entries.append((entry_file, line_no, line.strip()))
+                        except UnicodeDecodeError:
+                            print(f"Encoding issue detected in file: {entry_file}")
+
+                        # if entry_file.is_file():  # To be extra cautious, ensure this is a file before opening
+                        #     # rest of your code...
+                        #     # Open the diary file and search for the given string
+                        #     with open(entry_file, "r") as f:
+                        #         lines = f.readlines()
+                        #         for line_no, line in enumerate(lines, start=1):
+                        #             if search_str in line:
+                        #                 # If the string is found, add the file name and line number to the list
+                        #                 matched_entries.append((entry_file, line_no, line.strip()))
 
     # Display the matched entries
     if not matched_entries:
